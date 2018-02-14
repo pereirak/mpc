@@ -21,7 +21,7 @@ Actuator variables:
 2. a_t - The vehicle acceleration. 
 
 ![Dynamics](./dynamics.png)
-<a name="https://classroom.udacity.com/nanodegrees/nd013/">1</a>
+https://classroom.udacity.com/nanodegrees/nd013/
 
 **Parameters**
 
