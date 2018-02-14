@@ -20,7 +20,7 @@ Actuator variables:
 1. delta_t - The vehicle steering angle
 2. a_t - The vehicle acceleration. 
 
-(./dynamics.png)
+![Dynamics](./dynamics.png)
 
 **Parameters**
 
