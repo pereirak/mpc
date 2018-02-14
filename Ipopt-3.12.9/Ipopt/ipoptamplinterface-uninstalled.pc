@@ -1,0 +1,10 @@
+prefix=/usr/local
+libdir=/Users/kpereira/Projects/C++/CarND-MPC-Project/Ipopt-3.12.9/Ipopt/src/Apps/AmplSolver
+
+Name: IPOPT
+Description: Ampl Interface TNLP to Ipopt
+URL: https://projects.coin-or.org/Ipopt
+Version: 3.12.9
+Libs: ${libdir}/libipoptamplinterface.la 
+Cflags: -I/Users/kpereira/Projects/C++/CarND-MPC-Project/Ipopt-3.12.9/Ipopt/src/Apps/AmplSolver
+Requires: ipopt coinasl 

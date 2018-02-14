@@ -1,0 +1,10 @@
+prefix=/usr/local
+libdir=/Users/kpereira/Projects/C++/CarND-MPC-Project/Ipopt-3.12.9/ThirdParty/Mumps
+
+Name: Mumps
+Description: Multifrontal Massively Parallel sparse direct Solver
+URL: https://projects.coin-or.org/BuildTools
+Version: 1.6.0
+Libs: ${libdir}/libcoinmumps.la -framework Accelerate  -L/usr/local/Cellar/gcc/7.3.0/lib/gcc/7/gcc/x86_64-apple-darwin16.7.0/7.3.0 -L/usr/local/Cellar/gcc/7.3.0/lib/gcc/7/gcc/x86_64-apple-darwin16.7.0/7.3.0/../../.. -lgfortran -lSystem -lquadmath -lm
+Cflags: -I/Users/kpereira/Projects/C++/CarND-MPC-Project/Ipopt-3.12.9/ThirdParty/Mumps/MUMPS/libseq -I/Users/kpereira/Projects/C++/CarND-MPC-Project/Ipopt-3.12.9/ThirdParty/Mumps/MUMPS/include -DCOIN_USE_MUMPS_MPI_H
+Requires: coinmetis 

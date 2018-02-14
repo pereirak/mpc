@@ -70,7 +70,6 @@ int main() {
 
   // MPC is initialized here!
   MPC mpc;
-
   h.onMessage([&mpc](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
@@ -91,15 +90,50 @@ int main() {
           double py = j[1]["y"];
           double psi = j[1]["psi"];
           double v = j[1]["speed"];
+          double delta= j[1]["steering_angle"];
+          double throt = j[1]["throttle"];
 
-          /*
-          * TODO: Calculate steering angle and throttle using MPC.
-          *
-          * Both are in between [-1, 1].
-          *
-          */
-          double steer_value;
-          double throttle_value;
+
+          size_t n_waypoints = ptsx.size();
+          auto ptsx_t = Eigen::VectorXd(n_waypoints);
+          auto ptsy_t = Eigen::VectorXd(n_waypoints);
+
+          for (unsigned int i = 0; i < n_waypoints; i++ ) {
+            double dX = ptsx[i] - px;
+            double dY = ptsy[i] - py;
+            double minus_psi = 0.0 - psi;
+            ptsx_t(i) = dX * cos(minus_psi) - dY * sin(minus_psi);
+            ptsy_t(i) = dX * sin(minus_psi) + dY * cos(minus_psi);
+          }
+          
+          auto coeffs = polyfit(ptsx_t,ptsy_t,3);
+
+          // Actuator delay in seconds.
+          const double delay = 100 / 1000.0;
+          
+          // Initial state.
+          const double x0 = 0;
+          const double y0 = 0;
+          const double psi0 = 0;
+          const double cte0 = coeffs[0];
+          const double epsi0 = -atan(coeffs[1]);
+
+        // State after delay.
+          double x_delay = x0 + (v * cos(psi0) * delay);
+          double y_delay = y0 + (v * sin(psi0) * delay);
+          double psi_delay = psi0 - (v * (delta/2.67) * delay);
+          double v_delay = v + throt * delay;
+          double cte_delay = cte0 + (v * sin(epsi0) * delay );
+          double epsi_delay = epsi0 - (v * (atan(coeffs[1])/2.67) * delay);
+
+          // Define the state vector.
+          Eigen::VectorXd state(6);
+          state << x_delay, y_delay, psi_delay, v_delay, cte_delay, epsi_delay;
+
+          auto result = mpc.Solve(state, coeffs);
+
+          double steer_value = result[0]/deg2rad(25);
+          double throttle_value = result[1];
 
           json msgJson;
           // NOTE: Remember to divide by deg2rad(25) before you send the steering value back.
@@ -112,6 +146,13 @@ int main() {
           vector<double> mpc_y_vals;
 
           //.. add (x,y) points to list here, points are in reference to the vehicle's coordinate system
+                    for ( int i = 2; i < result.size(); i++ ) {
+            if ( i % 2 == 0 ) {
+              mpc_x_vals.push_back( result[i] );
+            } else {
+              mpc_y_vals.push_back( result[i] );
+            }
+          }
           // the points in the simulator are connected by a Green line
 
           msgJson["mpc_x"] = mpc_x_vals;
@@ -120,6 +161,16 @@ int main() {
           //Display the waypoints/reference line
           vector<double> next_x_vals;
           vector<double> next_y_vals;
+          
+          double poly_inc = 2.5;
+          int num_points = 25;
+          for ( int i = 0; i < num_points; i++ ) {
+            double x = poly_inc * i;
+            next_x_vals.push_back( x );
+            next_y_vals.push_back( polyeval(coeffs, x) );
+          }
+
+
 
           //.. add (x,y) points to list here, points are in reference to the vehicle's coordinate system
           // the points in the simulator are connected by a Yellow line
@@ -127,7 +178,7 @@ int main() {
           msgJson["next_x"] = next_x_vals;
           msgJson["next_y"] = next_y_vals;
 
-
+cout << 3;
           auto msg = "42[\"steer\"," + msgJson.dump() + "]";
           std::cout << msg << std::endl;
           // Latency

@@ -1,0 +1,10 @@
+prefix=/usr/local
+libdir=/Users/kpereira/Projects/C++/CarND-MPC-Project/Ipopt-3.12.9/Ipopt/src/Interfaces
+
+Name: IPOPT
+Description: Interior Point Optimizer
+URL: https://projects.coin-or.org/Ipopt
+Version: 3.12.9
+Libs: ${libdir}/libipopt.la -framework Accelerate -framework Accelerate -lm  -ldl
+Cflags: -I/Users/kpereira/Projects/C++/CarND-MPC-Project/Ipopt-3.12.9/Ipopt/src/Interfaces -I/Users/kpereira/Projects/C++/CarND-MPC-Project/Ipopt-3.12.9/Ipopt/src/Common -I/Users/kpereira/Projects/C++/CarND-MPC-Project/Ipopt-3.12.9/Ipopt/src/LinAlg -I/Users/kpereira/Projects/C++/CarND-MPC-Project/Ipopt-3.12.9/Ipopt/src/Algorithm -I/Users/kpereira/Projects/C++/CarND-MPC-Project/Ipopt-3.12.9/Ipopt/src/contrib/CGPenalty -I/Users/kpereira/Projects/C++/CarND-MPC-Project/Ipopt-3.12.9/Ipopt/src/contrib/LinearSolverLoader -I/Users/kpereira/Projects/C++/CarND-MPC-Project/Ipopt-3.12.9/Ipopt/src/Common
+Requires: coinmumps 
