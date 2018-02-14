@@ -1,8 +1,6 @@
 # CarND-Controls-MPC
 Self-Driving Car Engineer Nanodegree Program
-
 ---
-
 ## Model Predictive Control
 
 Model Predictive control is a feedback controller that controls a signal based on optimising a cost function of predicted states.
@@ -26,18 +24,32 @@ Actuator variables:
 
 **Parameters**
 
-MPC requires that the  Prediction horizon be tuned. The prediction horizon how far in the future the controller needs to predict and optimize. It is composed of two parameters the Number of predicted states (N) and the time increments (dt) be tuned. 
+***Prediction Horizon***
+
+MPC requires that the Prediction horizon be tuned. The prediction horizon how far in the future the controller needs to predict and optimize. It is composed of two parameters the Number of predicted states (N) and the time increments (dt) be tuned. 
 
 The prediction horizon for the vehicle was chose as 1 second. Any larger and the vehicle would run of th eroad because it could not handle sudden changes such as curves. 
 
 N was selected as 10 and dt was selected as 0.1. When larger values (such as 15,20) of N were chosen (and smaller values of dt to compensate), the vehicle would become unstable as it kept on trying to adjust it's trajectory too frequently. 
 When dt (0.2 sec) was increased and N was decreased (5) the vehicle was able to make it around the track but eventually became unstable.
 
+***Cost function***
+
+The cost function were defined using the follwing parameters:
+
+1. Cross Track Error and the angle error - Penalize the system for not having the vehicle on path
+2. Using the actuators - Penalize the system for using the actuators too much
+3. The derivative of the actuator signal - Penalize the system for fast actuation. Encourages smoother movement.
+
+Adding multiplication weights were manually chosen to improve performance. 
+
 **Preprocessing and Polynomial Fitting**
+
 The waypoints are prepocessed using a coordinate transform to rotate the coordinates to the vehicle's reference frame.
 The points are then fitted to a 3rd degree polynomial.
 
 **Model Predictive Control with Latency**
+
 To handle the latency of 100ms by calculating the state of the vehicle after 100ms had elapsed. This is the state that MPC receives and has to solve for.
 
 
